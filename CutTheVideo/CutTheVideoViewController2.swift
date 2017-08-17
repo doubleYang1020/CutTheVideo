@@ -40,6 +40,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
 
   
   let movie = MPMoviePlayerController()
+  
   var dataAry : [[UIImage]] = [[UIImage]]()
   var imgArry : [UIImage] =  [UIImage]()
   
@@ -437,7 +438,37 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     if isLongPrecess {
       return
     }
+    setCutBtnViewStateForCanNotDoing()
     print("scrollViewDidScroll \(scrollView.contentOffset.x)")
+  }
+  
+  func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    print("scrollViewDidEndScrollingAnimation")
+    
+    let arryIndex = getCurrentAryIndex()
+    let offsetX = scrollView.contentOffset.x + (UIScreen.main.bounds.size.width/2)
+    
+    var offSetX2 : CGFloat = 0.0
+    
+    for i in 0...arryIndex {
+      
+      let arry = dataAry[i]
+      offSetX2 = CGFloat(arry.count*50 + 14) + offSetX2
+    }
+    
+    if offsetX == offSetX2 - 12 || offsetX == offSetX2 - 5 || offsetX == offSetX2 - CGFloat(12) - CGFloat(dataAry[arryIndex].count)*CGFloat(50) {
+      print("落点在头在尾")
+      setCutBtnViewStateForCanNotDoing()
+      
+    }else{
+      setCutBtnViewStateForCanDoing()
+      print("落点在中间")
+    }
+    
+    
+    
+    
+    
   }
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     
@@ -466,16 +497,12 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: scrollView)
   }
   
-  func videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: UIScrollView)  {
-    // start -187.5  cell width = 2+ 50*i
-    
-//    dataAry
-    
+  func getCurrentAryIndex() -> (Int){
     var i = 0
     var currentOffSetX = 0.0
-    while CGFloat(currentOffSetX) < scrollView.contentOffset.x  + UIScreen.main.bounds.size.width/2{
+    while CGFloat(currentOffSetX) < videoKeyFrameCollectionView.contentOffset.x  + UIScreen.main.bounds.size.width/2{
       let arry = dataAry[i]
-      currentOffSetX = Double(arry.count*50 + 4*i) + currentOffSetX
+      currentOffSetX = Double(arry.count*50 + 14) + currentOffSetX
       
       i += 1
     }
@@ -483,6 +510,15 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     if i>=1 {
       i -= 1
     }
+    return i
+  }
+  
+  func videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: UIScrollView)  {
+    // start -187.5  cell width = 2+ 50*i
+    
+//    dataAry
+    
+    let i = getCurrentAryIndex()
     
     
     
@@ -498,6 +534,22 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     }
   }
   
+  func setCutBtnViewStateForCanDoing() {
+    btnBgView.alpha = 1
+    scissorsBtn.alpha = 1
+    scissorsBtn.isEnabled = true
+    lineView.alpha = 1
+    roundView.alpha = 1
+  }
+  
+  func setCutBtnViewStateForCanNotDoing() {
+    btnBgView.alpha = 0.5
+    scissorsBtn.alpha = 0.5
+    scissorsBtn.isEnabled = false
+    lineView.alpha = 0.5
+    roundView.alpha = 0.5
+  }
+  
   
   
   @objc private func back(){
@@ -508,18 +560,8 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   @objc private func clickCutBtn(){
     print("clickCutBtn")
     
-    var x = 0
-    var currentOffSetX = 0.0
-    while CGFloat(currentOffSetX) < videoKeyFrameCollectionView.contentOffset.x  + UIScreen.main.bounds.size.width/2{
-      let arry = dataAry[x]
-      currentOffSetX = Double(arry.count*50 + 4*x) + currentOffSetX
-      
-      x += 1
-    }
-    
-    if x>=1 {
-      x -= 1
-    }
+    let x = getCurrentAryIndex()
+
     
 //    let offsetX = videoKeyFrameCollectionView.contentOffset.x - (-(UIScreen.main.bounds.size.width/2))
     
@@ -555,7 +597,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     print("clickCutBtn \(offsetX)")
     
     videoKeyFrameCollectionView.setContentOffset(CGPoint.init(x: videoKeyFrameCollectionView.contentOffset.x + CGFloat.init(7), y: 0), animated: true)
-
+    setCutBtnViewStateForCanNotDoing()
     
   }
   

@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CutTheVideo/CutTheVideoViewController2.swift"
-            timestampString = "524570726.172903"
+            timestampString = "524632122.855593"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "370"
-            endingLineNumber = "370"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
             landmarkName = "collectionView(_:at:willMoveTo:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CutTheVideo/CutTheVideoViewController2.swift"
-            timestampString = "524570726.172903"
+            timestampString = "524632122.855593"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "374"
-            endingLineNumber = "374"
+            startingLineNumber = "375"
+            endingLineNumber = "375"
             landmarkName = "collectionView(_:at:didMoveTo:)"
             landmarkType = "7">
          </BreakpointContent>
