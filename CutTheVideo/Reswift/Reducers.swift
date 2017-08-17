@@ -16,6 +16,7 @@ func reducer(action: Action, state: AppState?) -> AppState {
     
   case let action as Actions.AddUndoOperation:
     state.undoHistory.add(op: action.operation)
+//    state.videoSegmentSequence.
     
   case _ as Actions.PopUndoOperation:
 //    state.currentOperation = state.undoHistory.undo()

@@ -11,5 +11,5 @@ import ReSwift
 
 struct AppState: StateType {
   var undoHistory = UndoHistory()
-//  var currentOperation: UndoHistory.Operation? = .none
+  var videoSegmentSequence: [VideoSegment] = []
 }

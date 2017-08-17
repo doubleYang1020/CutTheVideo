@@ -396,6 +396,11 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   func collectionView(_ collectionView: UICollectionView, at: IndexPath, didMoveTo toIndexPath: IndexPath) {
     let book = dataAry.remove(at: (at as NSIndexPath).item)
     dataAry.insert(book, at: (toIndexPath as NSIndexPath).item)
+    store.dispatch(
+      Actions.AddUndoOperation(operation:
+        UndoHistory.Operation.Rearrange(from: at, to: toIndexPath)
+      )
+    )
   }
   
   func scrollTrigerEdgeInsetsInCollectionView(_ collectionView: UICollectionView) -> UIEdgeInsets {
@@ -557,6 +562,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     
   }
+  
   @objc private func clickCutBtn(){
     print("clickCutBtn")
     
@@ -599,16 +605,50 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     videoKeyFrameCollectionView.setContentOffset(CGPoint.init(x: videoKeyFrameCollectionView.contentOffset.x + CGFloat.init(7), y: 0), animated: true)
     setCutBtnViewStateForCanNotDoing()
     
+    // Dispatch
+    store.dispatch(
+      Actions.AddUndoOperation(
+        operation: UndoHistory.Operation.Cut(
+          indexPath: IndexPath(item: Int(a), section: x)
+        )
+      )
+    )
+    
   }
   
   @objc private func clickSaveBtn(){
-    
-    
-    
+    fatalError("not implement")
+    // generate video segments
+    let segments = dataAry.reduce([]) { (acc, xs) -> [VideoSegment] in
+      return []
+    }
+    let videoSourceURL = URL(fileURLWithPath: "")
+    let videoDestinationURL = URL(fileURLWithPath: "")
+    try? VideoSegmentComposition.bar(source: videoSourceURL, destination: videoDestinationURL, instruction: segments)
   }
   
   @objc private func undoButtonAction(button: UIButton) -> () {
     print("undo action")
+    guard let oper = store.state.undoHistory.undo() else { return () }
+    switch oper {
+      
+    case .Cut(let indexPath):
+      let sectionA = dataAry.remove(at: indexPath.section)
+      let sectionB = dataAry.remove(at: indexPath.section)
+      let combinedArray = sectionA + sectionB
+      dataAry.insert(combinedArray, at: indexPath.section)
+      videoKeyFrameCollectionView.reloadData()
+      // TODO: scroll to cut position
+      
+    case .Rearrange(let to, let from):
+      let t = dataAry.remove(at: to.item)
+      dataAry.insert(t, at: from.item)
+      videoKeyFrameCollectionView.reloadItems(at: [from, to])
+      
+    default:
+      print("unimplement")
+      
+    }
   }
 
   override func didReceiveMemoryWarning() {
