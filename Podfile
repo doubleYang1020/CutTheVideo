@@ -6,9 +6,9 @@ target 'CutTheVideo' do
   use_frameworks!
 
   # Pods for CutTheVideo
-pod 'RTRootNavigationController'
-pod 'SnapKit', '~> 3.2.0'
+  pod 'RTRootNavigationController'
+  pod 'SnapKit', '~> 3.2.0'
+  pod 'ReSwift', '~> 4.0.0'
 
-
-pod "FDStackView", "1.0"
+  pod "FDStackView", "1.0"
 end

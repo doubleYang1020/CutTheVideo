@@ -6,8 +6,11 @@
 //  Copyright © 2017年 huyangyang. All rights reserved.
 //
 
+import ReSwift
 import UIKit
 import RTRootNavigationController
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -43,4 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+
+let store = Store<AppState>(reducer: reducer, state: nil)
 

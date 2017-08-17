@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		019840951F4542A9009F389A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840941F4542A9009F389A /* Actions.swift */; };
+		019840971F4542B0009F389A /* Reducers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840961F4542B0009F389A /* Reducers.swift */; };
+		019840991F4542B5009F389A /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840981F4542B5009F389A /* Stores.swift */; };
+		0198409E1F45438B009F389A /* UndoOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0198409B1F45438B009F389A /* UndoOperation.swift */; };
+		0198409F1F45438B009F389A /* VideoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0198409C1F45438B009F389A /* VideoConfiguration.swift */; };
+		019840A01F45438B009F389A /* VideoSegmentComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0198409D1F45438B009F389A /* VideoSegmentComposition.swift */; };
 		F2496B531F414D0100D77EF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B521F414D0100D77EF5 /* AppDelegate.swift */; };
 		F2496B551F414D0100D77EF5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B541F414D0100D77EF5 /* ViewController.swift */; };
 		F2496B581F414D0100D77EF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2496B561F414D0100D77EF5 /* Main.storyboard */; };
@@ -21,6 +27,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		019840941F4542A9009F389A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
+		019840961F4542B0009F389A /* Reducers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reducers.swift; sourceTree = "<group>"; };
+		019840981F4542B5009F389A /* Stores.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
+		0198409B1F45438B009F389A /* UndoOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UndoOperation.swift; sourceTree = "<group>"; };
+		0198409C1F45438B009F389A /* VideoConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoConfiguration.swift; sourceTree = "<group>"; };
+		0198409D1F45438B009F389A /* VideoSegmentComposition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoSegmentComposition.swift; sourceTree = "<group>"; };
 		40C7AAEC8BBA206434FE0506 /* Pods-CutTheVideo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CutTheVideo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CutTheVideo/Pods-CutTheVideo.debug.xcconfig"; sourceTree = "<group>"; };
 		851C054DFB58329EDDBF807F /* Pods-CutTheVideo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CutTheVideo.release.xcconfig"; path = "Pods/Target Support Files/Pods-CutTheVideo/Pods-CutTheVideo.release.xcconfig"; sourceTree = "<group>"; };
 		F2496B4F1F414D0100D77EF5 /* CutTheVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CutTheVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +64,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		019840931F454284009F389A /* Reswift */ = {
+			isa = PBXGroup;
+			children = (
+				019840941F4542A9009F389A /* Actions.swift */,
+				019840961F4542B0009F389A /* Reducers.swift */,
+				019840981F4542B5009F389A /* Stores.swift */,
+			);
+			path = Reswift;
+			sourceTree = "<group>";
+		};
+		0198409A1F45434A009F389A /* Oper */ = {
+			isa = PBXGroup;
+			children = (
+				0198409B1F45438B009F389A /* UndoOperation.swift */,
+				0198409C1F45438B009F389A /* VideoConfiguration.swift */,
+				0198409D1F45438B009F389A /* VideoSegmentComposition.swift */,
+			);
+			path = Oper;
+			sourceTree = "<group>";
+		};
 		4843C751AC2BF3FD10EB7DFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -90,6 +122,8 @@
 		F2496B511F414D0100D77EF5 /* CutTheVideo */ = {
 			isa = PBXGroup;
 			children = (
+				0198409A1F45434A009F389A /* Oper */,
+				019840931F454284009F389A /* Reswift */,
 				F2496B761F4421DC00D77EF5 /* RAReorderableLayout.swift */,
 				F2496B521F414D0100D77EF5 /* AppDelegate.swift */,
 				F2496B541F414D0100D77EF5 /* ViewController.swift */,
@@ -235,9 +269,15 @@
 			files = (
 				F2496B771F4421DC00D77EF5 /* RAReorderableLayout.swift in Sources */,
 				F2496B6D1F42A91900D77EF5 /* CutTheVideoViewController2.swift in Sources */,
+				0198409F1F45438B009F389A /* VideoConfiguration.swift in Sources */,
+				019840A01F45438B009F389A /* VideoSegmentComposition.swift in Sources */,
+				0198409E1F45438B009F389A /* UndoOperation.swift in Sources */,
 				F2496B551F414D0100D77EF5 /* ViewController.swift in Sources */,
+				019840951F4542A9009F389A /* Actions.swift in Sources */,
 				F2496B531F414D0100D77EF5 /* AppDelegate.swift in Sources */,
 				F2496B701F42C8A100D77EF5 /* CustomScissorsView.swift in Sources */,
+				019840971F4542B0009F389A /* Reducers.swift in Sources */,
+				019840991F4542B5009F389A /* Stores.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
