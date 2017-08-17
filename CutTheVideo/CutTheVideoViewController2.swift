@@ -6,6 +6,7 @@
 //  Copyright © 2017年 huyangyang. All rights reserved.
 //
 
+import ReSwift
 import UIKit
 import MediaPlayer
 //import RAReorderableLayout
@@ -51,6 +52,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   
   let btnBgView = UIView()
   let scissorsBtn = UIButton()
+  let undoButton = UIButton()
   let lineView = UIView()
   let roundView = UIView()
   
@@ -71,6 +73,17 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
       // Do any additional setup after loading the view.
   }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    store.subscribe(self)
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    store.unsubscribe(self)
+  }
+  
   fileprivate func initUI(){
     btnBgView.backgroundColor = UIColor.init(red: 0, green: 171.0/255, blue: 255.0/255, alpha: 1)
     btnBgView.layer.cornerRadius = 34/2
@@ -89,6 +102,15 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       make.width.height.equalTo(24)
     }
     scissorsBtn.addTarget(self, action: #selector(clickCutBtn), for: .touchUpInside)
+    
+    undoButton.setTitle("U", for: .normal)
+    undoButton.addTarget(self, action: #selector(undoButtonAction(button:)), for: .touchUpInside)
+    view.addSubview(undoButton)
+    undoButton.snp.makeConstraints { maker in
+      maker.width.height.equalTo(34)
+      maker.bottom.equalTo(self.view).offset(-5)
+      maker.right.equalTo(self.view).offset(-5)
+    }
     
     lineView.backgroundColor = UIColor.init(red: 0, green: 171.0/255, blue: 255.0/255, alpha: 1)
     self.view.addSubview(lineView)
@@ -374,6 +396,11 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   func collectionView(_ collectionView: UICollectionView, at: IndexPath, didMoveTo toIndexPath: IndexPath) {
     let book = dataAry.remove(at: (at as NSIndexPath).item)
     dataAry.insert(book, at: (toIndexPath as NSIndexPath).item)
+    store.dispatch(
+      Actions.AddUndoOperation(operation:
+        UndoHistory.Operation.Rearrange(from: at, to: toIndexPath)
+      )
+    )
   }
   
   func scrollTrigerEdgeInsetsInCollectionView(_ collectionView: UICollectionView) -> UIEdgeInsets {
@@ -535,6 +562,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     
   }
+  
   @objc private func clickCutBtn(){
     print("clickCutBtn")
     
@@ -577,12 +605,50 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     videoKeyFrameCollectionView.setContentOffset(CGPoint.init(x: videoKeyFrameCollectionView.contentOffset.x + CGFloat.init(7), y: 0), animated: true)
     setCutBtnViewStateForCanNotDoing()
     
+    // Dispatch
+    store.dispatch(
+      Actions.AddUndoOperation(
+        operation: UndoHistory.Operation.Cut(
+          indexPath: IndexPath(item: Int(a), section: x)
+        )
+      )
+    )
+    
   }
   
   @objc private func clickSaveBtn(){
-    
-    
-    
+    fatalError("not implement")
+    // generate video segments
+    let segments = dataAry.reduce([]) { (acc, xs) -> [VideoSegment] in
+      return []
+    }
+    let videoSourceURL = URL(fileURLWithPath: "")
+    let videoDestinationURL = URL(fileURLWithPath: "")
+    try? VideoSegmentComposition.bar(source: videoSourceURL, destination: videoDestinationURL, instruction: segments)
+  }
+  
+  @objc private func undoButtonAction(button: UIButton) -> () {
+    print("undo action")
+    guard let oper = store.state.undoHistory.undo() else { return () }
+    switch oper {
+      
+    case .Cut(let indexPath):
+      let sectionA = dataAry.remove(at: indexPath.section)
+      let sectionB = dataAry.remove(at: indexPath.section)
+      let combinedArray = sectionA + sectionB
+      dataAry.insert(combinedArray, at: indexPath.section)
+      videoKeyFrameCollectionView.reloadData()
+      // TODO: scroll to cut position
+      
+    case .Rearrange(let to, let from):
+      let t = dataAry.remove(at: to.item)
+      dataAry.insert(t, at: from.item)
+      videoKeyFrameCollectionView.reloadItems(at: [from, to])
+      
+    default:
+      print("unimplement")
+      
+    }
   }
 
   override func didReceiveMemoryWarning() {
@@ -601,4 +667,11 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     }
     */
 
+}
+
+// MARK: - StoreSubscriber 
+extension CutTheVideoViewController2: StoreSubscriber {
+  func newState(state: AppState) {
+    print(state)
+  }
 }
