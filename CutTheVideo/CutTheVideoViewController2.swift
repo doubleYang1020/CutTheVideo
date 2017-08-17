@@ -445,11 +445,11 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   func collectionView(_ collectionView: UICollectionView, at: IndexPath, didMoveTo toIndexPath: IndexPath) {
     let book = dataAry.remove(at: (at as NSIndexPath).item)
     dataAry.insert(book, at: (toIndexPath as NSIndexPath).item)
-    store.dispatch(
-      Actions.AddUndoOperation(operation:
-        UndoHistory.Operation.Rearrange(from: at, to: toIndexPath)
-      )
-    )
+//    store.dispatch(
+//      Actions.AddUndoOperation(operation:
+//        UndoHistory.Operation.Rearrange(from: at, to: toIndexPath)
+//      )
+//    )
   }
   
   func scrollTrigerEdgeInsetsInCollectionView(_ collectionView: UICollectionView) -> UIEdgeInsets {
@@ -476,6 +476,8 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       isLongPrecess = true
       self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
       
+      self.setCutBtnViewStateForCanNotDoing()
+      
     }
 
   }
@@ -485,6 +487,8 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     isLongPrecess = false
     dataAry[indexPath.row].imageAry = temporary
     self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
+ 
+    videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
     
   }
   
