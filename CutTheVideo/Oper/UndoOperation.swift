@@ -14,6 +14,7 @@ struct UndoHistory {
     case Hide(indexPath: IndexPath)
     case Show(indexPath: IndexPath)
     case Rearrange(from: IndexPath, to: IndexPath)
+    case Delete(indexPath: IndexPath, data: Any)
   }
   
   private var stack: Array<Operation> = []
@@ -26,6 +27,10 @@ struct UndoHistory {
   mutating func undo() -> Operation? {
     guard stack.count > 0 else { return .none }
     return stack.removeLast()
+  }
+  
+  mutating func clear() -> () {
+    stack.removeAll()
   }
 }
 
