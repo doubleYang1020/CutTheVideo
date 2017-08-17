@@ -1,0 +1,6 @@
+framework module Pods_CutTheVideo {
+  umbrella header "Pods-CutTheVideo-umbrella.h"
+
+  export *
+  module * { export * }
+}

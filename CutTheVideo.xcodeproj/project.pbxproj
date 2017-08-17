@@ -12,9 +12,17 @@
 		F2496B581F414D0100D77EF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2496B561F414D0100D77EF5 /* Main.storyboard */; };
 		F2496B5A1F414D0100D77EF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F2496B591F414D0100D77EF5 /* Assets.xcassets */; };
 		F2496B5D1F414D0100D77EF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2496B5B1F414D0100D77EF5 /* LaunchScreen.storyboard */; };
+		F2496B681F4153A600D77EF5 /* test01.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F2496B671F4153A600D77EF5 /* test01.mp4 */; };
+		F2496B6B1F416E7500D77EF5 /* test02.mov in Resources */ = {isa = PBXBuildFile; fileRef = F2496B6A1F416E7500D77EF5 /* test02.mov */; };
+		F2496B6D1F42A91900D77EF5 /* CutTheVideoViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B6C1F42A91900D77EF5 /* CutTheVideoViewController2.swift */; };
+		F2496B701F42C8A100D77EF5 /* CustomScissorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B6F1F42C8A100D77EF5 /* CustomScissorsView.swift */; };
+		F2496B771F4421DC00D77EF5 /* RAReorderableLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B761F4421DC00D77EF5 /* RAReorderableLayout.swift */; };
+		F35E284A72C646F7CAE8DCDF /* Pods_CutTheVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F971249634E4EA42360FE7EE /* Pods_CutTheVideo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		40C7AAEC8BBA206434FE0506 /* Pods-CutTheVideo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CutTheVideo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CutTheVideo/Pods-CutTheVideo.debug.xcconfig"; sourceTree = "<group>"; };
+		851C054DFB58329EDDBF807F /* Pods-CutTheVideo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CutTheVideo.release.xcconfig"; path = "Pods/Target Support Files/Pods-CutTheVideo/Pods-CutTheVideo.release.xcconfig"; sourceTree = "<group>"; };
 		F2496B4F1F414D0100D77EF5 /* CutTheVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CutTheVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2496B521F414D0100D77EF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F2496B541F414D0100D77EF5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +30,14 @@
 		F2496B591F414D0100D77EF5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F2496B5C1F414D0100D77EF5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F2496B5E1F414D0100D77EF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F2496B641F414E2E00D77EF5 /* CutTheVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutTheVideoViewController.swift; sourceTree = "<group>"; };
+		F2496B671F4153A600D77EF5 /* test01.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test01.mp4; sourceTree = "<group>"; };
+		F2496B6A1F416E7500D77EF5 /* test02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = test02.mov; sourceTree = "<group>"; };
+		F2496B6C1F42A91900D77EF5 /* CutTheVideoViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutTheVideoViewController2.swift; sourceTree = "<group>"; };
+		F2496B6F1F42C8A100D77EF5 /* CustomScissorsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomScissorsView.swift; sourceTree = "<group>"; };
+		F2496B731F42FDA300D77EF5 /* CutTheVideoViewController3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutTheVideoViewController3.swift; sourceTree = "<group>"; };
+		F2496B761F4421DC00D77EF5 /* RAReorderableLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RAReorderableLayout.swift; sourceTree = "<group>"; };
+		F971249634E4EA42360FE7EE /* Pods_CutTheVideo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CutTheVideo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +45,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F35E284A72C646F7CAE8DCDF /* Pods_CutTheVideo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4843C751AC2BF3FD10EB7DFC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F971249634E4EA42360FE7EE /* Pods_CutTheVideo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B90D1CB828DAA994866751F4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				40C7AAEC8BBA206434FE0506 /* Pods-CutTheVideo.debug.xcconfig */,
+				851C054DFB58329EDDBF807F /* Pods-CutTheVideo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		F2496B461F414D0100D77EF5 = {
 			isa = PBXGroup;
 			children = (
 				F2496B511F414D0100D77EF5 /* CutTheVideo */,
 				F2496B501F414D0100D77EF5 /* Products */,
+				B90D1CB828DAA994866751F4 /* Pods */,
+				4843C751AC2BF3FD10EB7DFC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,8 +90,15 @@
 		F2496B511F414D0100D77EF5 /* CutTheVideo */ = {
 			isa = PBXGroup;
 			children = (
+				F2496B761F4421DC00D77EF5 /* RAReorderableLayout.swift */,
 				F2496B521F414D0100D77EF5 /* AppDelegate.swift */,
 				F2496B541F414D0100D77EF5 /* ViewController.swift */,
+				F2496B641F414E2E00D77EF5 /* CutTheVideoViewController.swift */,
+				F2496B6C1F42A91900D77EF5 /* CutTheVideoViewController2.swift */,
+				F2496B731F42FDA300D77EF5 /* CutTheVideoViewController3.swift */,
+				F2496B6F1F42C8A100D77EF5 /* CustomScissorsView.swift */,
+				F2496B671F4153A600D77EF5 /* test01.mp4 */,
+				F2496B6A1F416E7500D77EF5 /* test02.mov */,
 				F2496B561F414D0100D77EF5 /* Main.storyboard */,
 				F2496B591F414D0100D77EF5 /* Assets.xcassets */,
 				F2496B5B1F414D0100D77EF5 /* LaunchScreen.storyboard */,
@@ -71,9 +114,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F2496B611F414D0100D77EF5 /* Build configuration list for PBXNativeTarget "CutTheVideo" */;
 			buildPhases = (
+				A4CEC800532E20DCD4BA51F5 /* [CP] Check Pods Manifest.lock */,
 				F2496B4B1F414D0100D77EF5 /* Sources */,
 				F2496B4C1F414D0100D77EF5 /* Frameworks */,
 				F2496B4D1F414D0100D77EF5 /* Resources */,
+				E207BA2355C4FE32FB325FB0 /* [CP] Embed Pods Frameworks */,
+				76AFE3F5E02C8383C2DFDB21 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -125,20 +171,73 @@
 			buildActionMask = 2147483647;
 			files = (
 				F2496B5D1F414D0100D77EF5 /* LaunchScreen.storyboard in Resources */,
+				F2496B681F4153A600D77EF5 /* test01.mp4 in Resources */,
 				F2496B5A1F414D0100D77EF5 /* Assets.xcassets in Resources */,
+				F2496B6B1F416E7500D77EF5 /* test02.mov in Resources */,
 				F2496B581F414D0100D77EF5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		76AFE3F5E02C8383C2DFDB21 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CutTheVideo/Pods-CutTheVideo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A4CEC800532E20DCD4BA51F5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E207BA2355C4FE32FB325FB0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CutTheVideo/Pods-CutTheVideo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F2496B4B1F414D0100D77EF5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2496B771F4421DC00D77EF5 /* RAReorderableLayout.swift in Sources */,
+				F2496B6D1F42A91900D77EF5 /* CutTheVideoViewController2.swift in Sources */,
 				F2496B551F414D0100D77EF5 /* ViewController.swift in Sources */,
 				F2496B531F414D0100D77EF5 /* AppDelegate.swift in Sources */,
+				F2496B701F42C8A100D77EF5 /* CustomScissorsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,10 +360,12 @@
 		};
 		F2496B621F414D0100D77EF5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 40C7AAEC8BBA206434FE0506 /* Pods-CutTheVideo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = DASH6JFSDW;
 				INFOPLIST_FILE = CutTheVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = huyangyang.CutTheVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -274,10 +375,12 @@
 		};
 		F2496B631F414D0100D77EF5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 851C054DFB58329EDDBF807F /* Pods-CutTheVideo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = DASH6JFSDW;
 				INFOPLIST_FILE = CutTheVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = huyangyang.CutTheVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -304,6 +407,7 @@
 				F2496B631F414D0100D77EF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

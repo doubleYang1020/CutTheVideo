@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import RTRootNavigationController
 class ViewController: UIViewController {
 
   override func viewDidLoad() {
@@ -20,6 +20,12 @@ class ViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
 
+  @IBAction func ClickCutBtn(_ sender: UIButton) {
+    self.rt_navigationController.pushViewController(CutTheVideoViewController2(), animated: true) { (comple) in
+      
+    }
+    
+  }
 
 }
 
