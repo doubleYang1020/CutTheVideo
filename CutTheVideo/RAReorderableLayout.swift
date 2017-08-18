@@ -99,8 +99,14 @@ open class RAReorderableLayout: UICollectionViewFlowLayout, UIGestureRecognizerD
         set { collectionView?.dataSource = dataSource }
         get { return collectionView?.dataSource as? RAReorderableLayoutDataSource }
     }
-    
+  
+//    var corType : CutTheVideoCorType = .ForDefault
+//    var dataAry : [CutTheVideoItemInfo] = [CutTheVideoItemInfo]()
+  
+    weak var cutCor:CutTheVideoViewController2? = nil
+  
     fileprivate var displayLink: CADisplayLink?
+  
     
     fileprivate var longPress: UILongPressGestureRecognizer?
     
@@ -323,9 +329,69 @@ open class RAReorderableLayout: UICollectionViewFlowLayout, UIGestureRecognizerD
                 fakeCell.center.y = self.fakeCellCenter!.y + self.panTranslation!.y
                 self.collectionView?.contentOffset.y += scrollRate
             } else {
+              
+              if self.cutCor?.corType == .ForDefault{
                 self.fakeCellCenter?.x += scrollRate
                 fakeCell.center.x = self.fakeCellCenter!.x + self.panTranslation!.x
                 self.collectionView?.contentOffset.x += scrollRate
+              }else{
+                let movingItemIndex = self.cellFakeView?.indexPath
+                
+                guard let dataAry = self.cutCor?.dataAry else{ return }
+                
+                
+                var allCellWidth = 0.0
+                let fatherIndex = dataAry[(movingItemIndex?.row)!].fatherIndex
+                
+                var movingCellStartPoint = 0.0
+                var movingCellWidth = 0.0
+                
+                var isHaveFatherIndex = false
+                var currentOffSetX = 0.0
+                for i in 0..<dataAry.count {
+                  
+                  if(dataAry[i].fatherIndex == fatherIndex){
+                    if (isHaveFatherIndex == false){
+                      movingCellStartPoint = currentOffSetX
+                      isHaveFatherIndex = true
+                    }
+                  movingCellWidth = Double(dataAry[i].imageAry.count*50 + 20) + movingCellWidth
+                    
+                    
+                  }
+                  
+                  let arry = dataAry[i].imageAry
+                   currentOffSetX = Double(arry.count*50 + 20) + currentOffSetX
+                  
+                }
+                allCellWidth = currentOffSetX
+                
+                print("movingCellStartPoint = \(movingCellStartPoint)  movingCellWidth = \(movingCellWidth) currentOffSetX = \(currentOffSetX) ollectionView.contentOffset = \(self.collectionView!.contentOffset.x)  scrollRate = \(scrollRate)")
+                
+                var scteenWidth = UIScreen.main.bounds.size.width
+                if scrollRate<0{
+                  scteenWidth = 0
+                }
+                
+                if( (self.collectionView?.contentOffset.x)! + scteenWidth > CGFloat(movingCellStartPoint) && (self.collectionView?.contentOffset.x)! + scteenWidth < CGFloat(movingCellStartPoint+movingCellWidth)){
+                  
+                  
+                  self.fakeCellCenter?.x += scrollRate
+                  fakeCell.center.x = self.fakeCellCenter!.x + self.panTranslation!.x
+                  self.collectionView?.contentOffset.x += scrollRate
+                }
+                
+                
+
+
+                
+                
+              }
+
+              
+              
+              
+
             }
             }, completion: nil)
         
@@ -415,7 +481,7 @@ open class RAReorderableLayout: UICollectionViewFlowLayout, UIGestureRecognizerD
   
     // long press gesture
     internal func handleLongPress(_ longPress: UILongPressGestureRecognizer!) {
-        let location = longPress.location(in: collectionView)
+        var location = longPress.location(in: collectionView)
         var indexPath: IndexPath? = collectionView?.indexPathForItem(at: location)
         
         if let cellFakeView = cellFakeView {
@@ -443,13 +509,16 @@ open class RAReorderableLayout: UICollectionViewFlowLayout, UIGestureRecognizerD
              delegate?.collectionView(self.collectionView!, collectionView: self, willBeginLongPrecessItemAt: indexPath!)
             
             
+            
             cellFakeView = RACellFakeView(cell: currentCell!)
+            
+            
             cellFakeView!.indexPath = indexPath
 
 
             let centerPoint = CGPoint.init(
               x:  longPress.location(in:collectionView).x,
-              y: 25)
+              y: longPress.location(in:collectionView).y - 20)
             
             
             cellFakeView!.originalCenter = centerPoint

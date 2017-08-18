@@ -28,6 +28,8 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   
   var corType : CutTheVideoCorType = .ForDefault
   
+  let layout = RAReorderableLayout()
+  
   var videoUrlAry : [URL] = [URL]()
   
   
@@ -283,7 +285,10 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   }
   
   fileprivate func initCollectionView(){
-    let layout = RAReorderableLayout()
+    
+
+    layout.cutCor = self
+    
     layout.itemSize = CGSize.init(width: 50, height: 54)
     //    layout.estimatedItemSize = CGSize.init(width: 50, height: 50)
     layout.scrollDirection = .horizontal
@@ -585,35 +590,47 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
         self.setCutBtnViewStateForCanNotDoing()
 
       }else{
-        tempDataAryTop.removeAll()
-        tempDataAryMiddle.removeAll()
-        tempDataAryButton.removeAll()
         
-        
-        
-        
-        let fatherIndex = dataAry[indexPath.row].fatherIndex
-        
+        longPrescessCellIndex = indexPath
         temporary  = dataAry[indexPath.row].imageAry
-        for i in 0..<dataAry.count {
-          var item = dataAry[i]
-          if item.fatherIndex<fatherIndex {
-            tempDataAryTop.append(item)
-          }else if item.fatherIndex == fatherIndex {
-            if indexPath.row == i {
-              item.imageAry = [temporary.first!]
-            }
-            
-            tempDataAryMiddle.append(item)
-          }else{
-            tempDataAryButton.append(item)
-          }
-          
-        }
         
-        dataAry = tempDataAryMiddle
+        dataAry[indexPath.row].imageAry = [temporary.first!]
         
+//        self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
         self.videoKeyFrameCollectionView.reloadData()
+        
+        self.setCutBtnViewStateForCanNotDoing()
+        
+        
+//        tempDataAryTop.removeAll()
+//        tempDataAryMiddle.removeAll()
+//        tempDataAryButton.removeAll()
+//        
+        
+        
+        
+//        let fatherIndex = dataAry[indexPath.row].fatherIndex
+//        
+//        temporary  = dataAry[indexPath.row].imageAry
+//        for i in 0..<dataAry.count {
+//          var item = dataAry[i]
+//          if item.fatherIndex<fatherIndex {
+//            tempDataAryTop.append(item)
+//          }else if item.fatherIndex == fatherIndex {
+//            if indexPath.row == i {
+//              item.imageAry = [temporary.first!]
+//            }
+//            
+//            tempDataAryMiddle.append(item)
+//          }else{
+//            tempDataAryButton.append(item)
+//          }
+//          
+//        }
+//        
+//        dataAry = tempDataAryMiddle
+//        
+//        self.videoKeyFrameCollectionView.reloadData()
 //        self.videoKeyFrameCollectionView.contentOffset = CGPoint.init(x: 0, y: 0)
         
       }
@@ -645,11 +662,27 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       )
       
     }else{
-      dataAry[indexPath.row].imageAry = temporary
-      dataAry = tempDataAryTop + dataAry + tempDataAryButton
       
+      dataAry[indexPath.row].imageAry = temporary
+//      self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
       self.videoKeyFrameCollectionView.reloadData()
+      
       videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
+      
+      guard moveCount % 2 == 1 else { return () }
+      guard let (from, to) = tempMoveInfo else { return () }
+      store.dispatch(
+        Actions.AddUndoOperation(operation:
+          UndoHistory.Operation.Rearrange(from: from, to: to)
+        )
+      )
+      
+//      dataAry = tempDataAryTop + dataAry + tempDataAryButton
+//      dataAry[indexPath.row ].imageAry = temporary
+//      
+//      
+//      self.videoKeyFrameCollectionView.reloadData()
+//      videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
       
     }
 
