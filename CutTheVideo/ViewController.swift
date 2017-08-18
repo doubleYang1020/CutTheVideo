@@ -26,6 +26,16 @@ class ViewController: UIViewController {
     }
     
   }
+  @IBAction func ClickCutMoreVideoBtn(_ sender: UIButton) {
+    
+    
+    let cor = CutTheVideoViewController2()
+    cor.corType = .ForManyPeriodOfVideo
+    self.rt_navigationController.pushViewController(cor, animated: true) { (comple) in
+      
+    }
+    
+  }
 
 }
 
