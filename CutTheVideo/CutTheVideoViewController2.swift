@@ -9,77 +9,13 @@
 import ReSwift
 import UIKit
 import MediaPlayer
-class CutVideoPreviewCell: UICollectionViewCell {
-  
-  let stackView = UIView()
-  
-  
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    self.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
-    //    stackView.axis = .horizontal
-    //    stackView.distribution = .fillEqually
-    
-    stackView.frame = CGRect.init(x: 2, y: 2, width: frame.size.width-4, height: 50)
-    self.contentView.addSubview(stackView)
-    //    stackView.backgroundColor = UIColor.blue
-    //    stackView.frame = CGRect.init(x: 0, y: 2, width: frame.size.width, height: 46)
-    
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-}
 
-class CutVideosPreviewCell: UICollectionViewCell {
-  
-  let stackView = UIView()
-  let whiteBgView = UIView()
-  
-  var blurEffectView :UIVisualEffectView!
-  
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    self.backgroundColor = UIColor.clear
-    
-    
-    let blurEffect = UIBlurEffect.init(style: .light)
-    self.blurEffectView = UIVisualEffectView.init(effect: blurEffect)
-//    blurEffectView.frame = CGRect.init(x: 0, y: 0, width: frame.size.width, height: 60)
-    self.contentView.addSubview(blurEffectView)
-    blurEffectView.snp.makeConstraints { (make) -> Void in
-      make.top.right.bottom.left.equalTo(self.contentView)
-    }
-     
-    //    stackView.axis = .horizontal
-    //    stackView.distribution = .fillEqually
-    self.whiteBgView.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
-//    self.whiteBgView.frame = CGRect.init(x: 3, y: 3, width: frame.size.width - 6, height: 54)
-    self.contentView.addSubview(whiteBgView)
-    whiteBgView.snp.makeConstraints { (make) -> Void in
-      make.top.equalTo(self.contentView).offset(3)
-      make.left.equalTo(self.contentView).offset(3)
-      make.bottom.equalTo(self.contentView).offset(-3)
-      make.right.equalTo(self.contentView).offset(-3)
-    }
-    
-    stackView.frame = CGRect.init(x: 2, y: 2, width: frame.size.width-4, height: 50)
-    self.whiteBgView.addSubview(stackView)
-    //    stackView.backgroundColor = UIColor.blue
-    //    stackView.frame = CGRect.init(x: 0, y: 2, width: frame.size.width, height: 46)
-    
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-}
 
-class CutTheVideoItemInfo: NSObject {
-  var imageAry:[UIImage] = [UIImage]()
-  var isShowGriddingShade : Bool = false
-  var fatherIndex: Int = 0
+struct CutTheVideoItemInfo {
+  var imageAry: [UIImage] = []
+  var isShowGriddingShade: Bool = false
+  let videoSegment: VideoSegment
+  let fatherIndex: Int 
 }
 
 
@@ -111,21 +47,26 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   let btnBgView = UIView()
   let scissorsBtn = UIButton()
   let undoButton = UIButton()
+  let playButton = UIButton()
   let lineView = UIView()
   let roundView = UIView()
   
   var isLongPrecess :Bool = false
   var longPrescessCellIndex :IndexPath = IndexPath.init(row: 0, section: 0)
   
+  private let playerView = UIView()
+  private let avPlayer = AVPlayer()
+  private let playerLayer = AVPlayerLayer()
   private var moveCount = 0
   private var tempMoveInfo: (IndexPath, IndexPath)? = .none
+  private var assetDuration: CMTime = kCMTimeZero
 		
   
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationController?.setNavigationBarHidden(true, animated: false)
     
-    
+    playerLayer.player = avPlayer
     
     initVideoKeyFrameData()
     
@@ -158,6 +99,12 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     store.unsubscribe(self)
   }
   
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+    
+  }
+  
   fileprivate func initUI(){
     btnBgView.backgroundColor = UIColor.init(red: 0, green: 171.0/255, blue: 255.0/255, alpha: 1)
     btnBgView.layer.cornerRadius = 34/2
@@ -186,6 +133,15 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       maker.right.equalTo(self.view).offset(-5)
     }
     
+    playButton.setTitle("P", for: .normal)
+    playButton.addTarget(self, action: #selector(playButtonAction(button:)), for: .touchUpInside)
+    view.addSubview(playButton)
+    playButton.snp.makeConstraints { maker in
+      maker.width.height.equalTo(34)
+      maker.bottom.equalTo(self.view).offset(-5)
+      maker.left.equalTo(self.view).offset(5)
+    }
+    
     lineView.backgroundColor = UIColor.init(red: 0, green: 171.0/255, blue: 255.0/255, alpha: 1)
     self.view.addSubview(lineView)
     lineView.snp.makeConstraints { (make) -> Void in
@@ -206,6 +162,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     }
     
   }
+  
   fileprivate func initVideoKeyFrameData(){
     
     
@@ -230,23 +187,19 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     
     movie.view.translatesAutoresizingMaskIntoConstraints = false
-//    let moviePath = Bundle.main.path(forResource: "test03", ofType: "mp4")
-//    //    let moviePath = Bundle.main.path(forResource: "test01", ofType: "mp4")
     let asset = AVURLAsset.init(url: videoUrlAry.first!)
-    let image = getImage(with: asset, andTime: CMTimeMakeWithSeconds(0, 60))
-    let bgimageView = UIImageView.init(image: image)
-    self.view.addSubview(bgimageView)
-    bgimageView.snp.makeConstraints { (make) -> Void in
+    avPlayer.replaceCurrentItem(with: AVPlayerItem(asset: asset))
+    view.addSubview(playerView)
+    playerView.snp.makeConstraints { (make) -> Void in
       make.top.right.bottom.left.equalTo(self.view)
     }
-    
+    playerLayer.frame = UIScreen.main.bounds
+    playerView.layer.insertSublayer(playerLayer, at: 0)
     
     movie.contentURL = videoUrlAry.first!
     movie.shouldAutoplay = false
     
-    
-    let assetDuration = asset.duration
-    
+    assetDuration = asset.duration
     
     var arry2:[NSNumber] = [NSNumber]()
     assetSeconds = Int(CMTimeGetSeconds(assetDuration))
@@ -267,6 +220,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     self.view.backgroundColor = UIColor.black
     
     let img = UIImage.init(named: "nav-bg")
+    
     let bgView=UIImageView(image: img)
     self.view.addSubview(bgView)
     bgView.snp.makeConstraints { (make) in
@@ -403,13 +357,17 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     let image = info["MPMoviePlayerThumbnailImageKey"] as! UIImage;
     
     imgArry.append(image)
-    if imgArry.count ==  assetSeconds+1{
+    if imgArry.count == assetSeconds + 1 {
       print("MPMoviePlayerThumbnailImageRequestDidFinishNotification");
       
-      let itemInfo = CutTheVideoItemInfo.init()
-      itemInfo.imageAry = imgArry
-      itemInfo.isShowGriddingShade = false
-      itemInfo.fatherIndex = imgArry.count - 1
+
+      
+      let itemInfo = CutTheVideoItemInfo(
+        imageAry: imgArry,
+        isShowGriddingShade: false,
+        videoSegment: VideoSegment(start: kCMTimeZero, end: assetDuration),
+        fatherIndex : imgArry.count - 1
+      )
       dataAry.append(itemInfo)
       
       
@@ -512,7 +470,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     if self.corType == .ForDefault {
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cutVideoPreviewCell", for: indexPath) as! CutVideoPreviewCell
       
-      cell.stackView.subviews.map({$0.removeFromSuperview()})//.apply { $0.removeFromSuperview() }
+      _ = cell.stackView.subviews.map({$0.removeFromSuperview()})//.apply { $0.removeFromSuperview() }
       let imageAry = dataAry[indexPath.row].imageAry
       let isShowGriddingShade = dataAry[indexPath.row].isShowGriddingShade
       for i in 0..<imageAry.count {
@@ -537,15 +495,13 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
           cell.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
         }
         
-        
-        
       }
       
       return cell
     }else{
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cutVideosPreviewCell", for: indexPath) as! CutVideosPreviewCell
       
-      cell.stackView.subviews.map({$0.removeFromSuperview()})//.apply { $0.removeFromSuperview() }
+      _ = cell.stackView.subviews.map({$0.removeFromSuperview()})//.apply { $0.removeFromSuperview() }
       let imageAry = dataAry[indexPath.row].imageAry
       let isShowGriddingShade = dataAry[indexPath.row].isShowGriddingShade
       for i in 0..<imageAry.count {
@@ -569,12 +525,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
           cell.whiteBgView.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
         }
         
-        
-        
       }
-      
-      
-      
       
       return cell
     }
@@ -687,6 +638,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     
   }
+  
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     
     if isLongPrecess {
@@ -861,7 +813,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       
       if isShowGriddingShade {
         // 隐藏 GriddingShade
-        let cutVideoItemInfo = self.dataAry[indexPath.row]
+        var cutVideoItemInfo = self.dataAry[indexPath.row]
         cutVideoItemInfo.isShowGriddingShade = false
         self.dataAry[indexPath.row] = cutVideoItemInfo
         
@@ -874,7 +826,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       }
       else{
         // 显示 GriddingShade
-        let cutVideoItemInfo = self.dataAry[indexPath.row]
+        var cutVideoItemInfo = self.dataAry[indexPath.row]
         cutVideoItemInfo.isShowGriddingShade = true
         self.dataAry[indexPath.row] = cutVideoItemInfo
         
@@ -943,23 +895,31 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       }
     }
     
-    dataAry[x].imageAry = arya
+
+    let originSection = dataAry[x]
+    print("origin: \(originSection.videoSegment.duration.seconds)")
+    print("actual: \(dataAry[x].videoSegment.duration.seconds)")
+    assert(originSection.videoSegment.duration.seconds == dataAry[x].videoSegment.duration.seconds)
+    let durationSectionA = CMTimeMake(Int64(a), 1)
+    let sectionA = CutTheVideoItemInfo(
+      imageAry: arya,
+      isShowGriddingShade: originSection.isShowGriddingShade,
+      videoSegment: VideoSegment(start: originSection.videoSegment.start, duration: durationSectionA),
+    fatherIndex: dataAry[x].fatherIndex
+    )
+
     
-    let itemtInfo = CutTheVideoItemInfo.init()
-    itemtInfo.imageAry = aryb
-    itemtInfo.isShowGriddingShade = false
-    itemtInfo.fatherIndex = dataAry[x].fatherIndex
+    let durationSectionB = CMTimeSubtract(originSection.videoSegment.duration, durationSectionA)
+    let startTimeSectionB = CMTimeAdd(sectionA.videoSegment.start, sectionA.videoSegment.duration)
+    let sectionB = CutTheVideoItemInfo(
+      imageAry: aryb,
+      isShowGriddingShade: originSection.isShowGriddingShade,
+      videoSegment: VideoSegment(start: startTimeSectionB, duration: durationSectionB),
+      fatherIndex: dataAry[x].fatherIndex
+    )
     
-    if dataAry.count - 1 > x {
-      
-      
-      
-      dataAry.insert(itemtInfo, at: x+1)
-    }else{
-      dataAry.append(itemtInfo)
-    }
-    
-    
+    dataAry[x] = sectionA
+    dataAry.insert(sectionB, at: x + 1)
     
     videoKeyFrameCollectionView.reloadData()
     print("clickCutBtn \(offsetX)")
@@ -1006,9 +966,15 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       let sectionB = dataAry.remove(at: indexPath.section)
       let combinedArray = sectionA.imageAry + sectionB.imageAry
       
-      let infoItem = CutTheVideoItemInfo.init()
-      infoItem.imageAry = combinedArray
-      infoItem.isShowGriddingShade = false
+      let duration = CMTimeAdd(sectionA.videoSegment.duration, sectionA.videoSegment.duration)
+      let infoItem = CutTheVideoItemInfo(
+        imageAry: combinedArray,
+        isShowGriddingShade: false,
+        videoSegment: VideoSegment(start: sectionA.videoSegment.start, duration: duration),
+        fatherIndex: sectionA.fatherIndex
+      )
+      
+
       
       dataAry.insert(infoItem, at: indexPath.section)
       videoKeyFrameCollectionView.reloadData()
@@ -1020,13 +986,15 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       videoKeyFrameCollectionView.reloadItems(at: [from, to])
       
     case .Hide(let indexPath):
-      let cutVideoItemInfo = dataAry[indexPath.row]
+      var cutVideoItemInfo = dataAry[indexPath.row]
       cutVideoItemInfo.isShowGriddingShade = true
+      dataAry[indexPath.row] = cutVideoItemInfo
       videoKeyFrameCollectionView.reloadItems(at: [indexPath])
       
     case .Show(let indexPath):
-      let cutVideoItemInfo = dataAry[indexPath.row]
+      var cutVideoItemInfo = dataAry[indexPath.row]
       cutVideoItemInfo.isShowGriddingShade = false
+      dataAry[indexPath.row] = cutVideoItemInfo
       videoKeyFrameCollectionView.reloadItems(at: [indexPath])
       
     case .Delete(let indexPath, let data):
@@ -1034,7 +1002,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       videoKeyFrameCollectionView.insertItems(at: [indexPath])
       
     default:
-      print("unimplement")
+      print("not implement")
       
     }
     
@@ -1042,11 +1010,23 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+  @objc private func playButtonAction(button: UIButton) -> () {
+//    print(avPlayer.rate)
+//    avPlayer.replaceCurrentItem(with: <#T##AVPlayerItem?#>)
+    DispatchQueue.global(qos: .background).async {
+      for vs in self.generateVideoSegmentSequence() {
+        vs.executionPlan(player: self.avPlayer)
+      }
+      self.avPlayer.pause()
+    }
   }
   
+  // MARK: - helper methods
+  private func generateVideoSegmentSequence() -> VideoSegmentSequnce {
+    return dataAry
+      .filter { $0.isShowGriddingShade == false }
+      .map { $0.videoSegment }
+  }
   
   /*
    // MARK: - Navigation
