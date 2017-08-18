@@ -79,7 +79,7 @@ class CutVideosPreviewCell: UICollectionViewCell {
 class CutTheVideoItemInfo: NSObject {
   var imageAry:[UIImage] = [UIImage]()
   var isShowGriddingShade : Bool = false
-  let fatherIndex: Int = 0
+  var fatherIndex: Int = 0
 }
 
 
@@ -409,6 +409,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       let itemInfo = CutTheVideoItemInfo.init()
       itemInfo.imageAry = imgArry
       itemInfo.isShowGriddingShade = false
+      itemInfo.fatherIndex = imgArry.count - 1
       dataAry.append(itemInfo)
       
       
@@ -615,6 +616,8 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   func collectionView(_ collectionView: UICollectionView, collectionView layout: RAReorderableLayout, willBeginLongPrecessItemAt indexPath: IndexPath) {
     
     if isLongPrecess == false {
+      
+      
       print("willBeginLongPrecessItemAt")
       longPrescessCellIndex = indexPath
       temporary  = dataAry[indexPath.row].imageAry
@@ -945,6 +948,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     let itemtInfo = CutTheVideoItemInfo.init()
     itemtInfo.imageAry = aryb
     itemtInfo.isShowGriddingShade = false
+    itemtInfo.fatherIndex = dataAry[x].fatherIndex
     
     if dataAry.count - 1 > x {
       
