@@ -9,10 +9,6 @@
 import ReSwift
 import UIKit
 import MediaPlayer
-//import RAReorderableLayout
-//import FDStackView
-
-
 class CutVideoPreviewCell: UICollectionViewCell {
   
   let stackView = UIView()
@@ -39,13 +35,19 @@ class CutVideoPreviewCell: UICollectionViewCell {
 class CutTheVideoItemInfo: NSObject {
   var imageAry:[UIImage] = [UIImage]()
   var isShowGriddingShade : Bool = false
+  
+  let fatherIndex: Int = 0
 }
 
 
-
+enum CutTheVideoCorType {
+  case ForDefault
+  case ForManyPeriodOfVideo
+}
 
 class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, RAReorderableLayoutDataSource{
   
+  var corType : CutTheVideoCorType = .ForDefault
   
   let movie = MPMoviePlayerController()
   
@@ -845,6 +847,9 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       print("unimplement")
       
     }
+    
+//    detectionCutBtnViewsState()
+    videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
   }
   
   override func didReceiveMemoryWarning() {
