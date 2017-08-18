@@ -31,9 +31,9 @@ class CutVideoPreviewCell: UICollectionViewCell {
   }
 }
 
-class CutVideosPreviewCell: UICollectionViewCell {
+class CutVideosPreviewCell: CutVideoPreviewCell {
   
-  let stackView = UIView()
+//  let stackView = UIView()
   let whiteBgView = UIView()
   
   var blurEffectView :UIVisualEffectView!

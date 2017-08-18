@@ -431,42 +431,26 @@ open class RAReorderableLayout: UICollectionViewFlowLayout, UIGestureRecognizerD
         case .began:
             // will begin drag item
             delegate?.collectionView(self.collectionView!, collectionView: self, willBeginDraggingItemAt: indexPath!)
+           
             collectionView?.scrollsToTop = false
             
 //            guard let currentCell = collectionView?.dequeueReusableCell(withReuseIdentifier: "cutVideoPreviewCell", for: indexPath!) else {
 //              return
 //            }
+            
             let currentCell = collectionView?.cellForItem(at: indexPath!)
             
-            delegate?.collectionView(self.collectionView!, collectionView: self, willBeginLongPrecessItemAt: indexPath!)
+             delegate?.collectionView(self.collectionView!, collectionView: self, willBeginLongPrecessItemAt: indexPath!)
+            
             
             cellFakeView = RACellFakeView(cell: currentCell!)
             cellFakeView!.indexPath = indexPath
-//            cellFakeView!.originalCenter = currentCell.center
-            
-//            let centerPoint = CGPoint.init(x: location.x , y: location.y)
-            
-            let collectonwidth = (collectionView?.contentSize.width)! - (UIScreen.main.bounds.size.width/2 - 50)
-//            var centerPoint: CGPoint
-//            if currentCell?.frame.origin.x == 0 {
-//                centerPoint = CGPoint.init(x: longPress.location(in: collectionView?.superview).x /*+ (currentCell?.frame.width)!/2*/ , y: location.y)
-//            }else{
-//               centerPoint = location
-//            }
-            
-            var centerPoint = CGPoint.init(x: collectonwidth - (currentCell?.frame.size.width)! - (currentCell?.frame.origin.x)! + longPress.location(in: collectionView?.superview).x - UIScreen.main.bounds.size.width/2, y: location.y)
-//
-//
-            centerPoint = CGPoint.init(
+
+
+            let centerPoint = CGPoint.init(
               x:  longPress.location(in:collectionView).x,
               y: 25)
             
-//            let xx = Double(longPress.location(in: collectionView!.superview!).x)
-//            
-//            let centerPoint = CGPoint(
-//              x: xx > 375 * 0.5 ? xx * -1 : xx,
-//              y: 25
-//            )
             
             cellFakeView!.originalCenter = centerPoint
             cellFakeView!.center = centerPoint
@@ -564,12 +548,12 @@ private class RACellFakeView: UIView {
         super.init(frame: cell.frame)
       
       
-        self.backgroundColor = UIColor.green
+        self.backgroundColor = UIColor.white
         self.frame = CGRect.init(x: 0, y: 0, width: 54, height: 50)
         let mycell = cell as! CutVideoPreviewCell
       
         let imageView = mycell.stackView.subviews.first as! UIImageView
-      let  image = imageView.image
+        let  image = imageView.image
         self.cell = cell
       
         

@@ -36,6 +36,11 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   //  var dataAry : [[UIImage]] = [[UIImage]]()
   
   var dataAry : [CutTheVideoItemInfo] = [CutTheVideoItemInfo]()
+  
+  var tempDataAryTop : [CutTheVideoItemInfo] = [CutTheVideoItemInfo]()
+  var tempDataAryMiddle : [CutTheVideoItemInfo] = [CutTheVideoItemInfo]()
+  var tempDataAryButton : [CutTheVideoItemInfo] = [CutTheVideoItemInfo]()
+  
   var imgArry : [UIImage] =  [UIImage]()
   
   var temporary: [UIImage] = [UIImage]()
@@ -366,7 +371,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
         imageAry: imgArry,
         isShowGriddingShade: false,
         videoSegment: VideoSegment(start: kCMTimeZero, end: assetDuration),
-        fatherIndex : imgArry.count - 1
+        fatherIndex : dataAry.count
       )
       dataAry.append(itemInfo)
       
@@ -567,17 +572,53 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   func collectionView(_ collectionView: UICollectionView, collectionView layout: RAReorderableLayout, willBeginLongPrecessItemAt indexPath: IndexPath) {
     
     if isLongPrecess == false {
-      
-      
-      print("willBeginLongPrecessItemAt")
-      longPrescessCellIndex = indexPath
-      temporary  = dataAry[indexPath.row].imageAry
-      
-      dataAry[indexPath.row].imageAry = [temporary.first!]
       isLongPrecess = true
-      self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
+      print("willBeginLongPrecessItemAt")
+      if self.corType == .ForDefault {
+        longPrescessCellIndex = indexPath
+        temporary  = dataAry[indexPath.row].imageAry
+        
+        dataAry[indexPath.row].imageAry = [temporary.first!]
+        
+        self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
+        
+        self.setCutBtnViewStateForCanNotDoing()
+
+      }else{
+        tempDataAryTop.removeAll()
+        tempDataAryMiddle.removeAll()
+        tempDataAryButton.removeAll()
+        
+        
+        
+        
+        let fatherIndex = dataAry[indexPath.row].fatherIndex
+        
+        temporary  = dataAry[indexPath.row].imageAry
+        for i in 0..<dataAry.count {
+          var item = dataAry[i]
+          if item.fatherIndex<fatherIndex {
+            tempDataAryTop.append(item)
+          }else if item.fatherIndex == fatherIndex {
+            if indexPath.row == i {
+              item.imageAry = [temporary.first!]
+            }
+            
+            tempDataAryMiddle.append(item)
+          }else{
+            tempDataAryButton.append(item)
+          }
+          
+        }
+        
+        dataAry = tempDataAryMiddle
+        
+        self.videoKeyFrameCollectionView.reloadData()
+//        self.videoKeyFrameCollectionView.contentOffset = CGPoint.init(x: 0, y: 0)
+        
+      }
       
-      self.setCutBtnViewStateForCanNotDoing()
+      
       
     }
     
@@ -585,19 +626,33 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   
   
   func collectionView(_ collectionView: UICollectionView, collectionView layout: RAReorderableLayout, didEndDraggingItemTo indexPath: IndexPath) {
+    
+    
     isLongPrecess = false
-    dataAry[indexPath.row].imageAry = temporary
-    self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
     
-    videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
-    
-    guard moveCount % 2 == 1 else { return () }
-    guard let (from, to) = tempMoveInfo else { return () }
-    store.dispatch(
-      Actions.AddUndoOperation(operation:
-        UndoHistory.Operation.Rearrange(from: from, to: to)
+    if self.corType == .ForDefault {
+      dataAry[indexPath.row].imageAry = temporary
+      self.videoKeyFrameCollectionView.reloadItems(at: [indexPath])
+      
+      videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
+      
+      guard moveCount % 2 == 1 else { return () }
+      guard let (from, to) = tempMoveInfo else { return () }
+      store.dispatch(
+        Actions.AddUndoOperation(operation:
+          UndoHistory.Operation.Rearrange(from: from, to: to)
+        )
       )
-    )
+      
+    }else{
+      dataAry[indexPath.row].imageAry = temporary
+      dataAry = tempDataAryTop + dataAry + tempDataAryButton
+      
+      self.videoKeyFrameCollectionView.reloadData()
+      videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
+      
+    }
+
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
