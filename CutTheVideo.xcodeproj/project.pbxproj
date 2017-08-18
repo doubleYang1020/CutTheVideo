@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		010F10721F46BD280041876D /* CutVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */; };
 		019840951F4542A9009F389A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840941F4542A9009F389A /* Actions.swift */; };
 		019840971F4542B0009F389A /* Reducers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840961F4542B0009F389A /* Reducers.swift */; };
 		019840991F4542B5009F389A /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840981F4542B5009F389A /* Stores.swift */; };
@@ -23,10 +24,12 @@
 		F2496B6D1F42A91900D77EF5 /* CutTheVideoViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B6C1F42A91900D77EF5 /* CutTheVideoViewController2.swift */; };
 		F2496B701F42C8A100D77EF5 /* CustomScissorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B6F1F42C8A100D77EF5 /* CustomScissorsView.swift */; };
 		F2496B771F4421DC00D77EF5 /* RAReorderableLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2496B761F4421DC00D77EF5 /* RAReorderableLayout.swift */; };
+		F25DE8AE1F46957900942A9D /* test03.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F25DE8AD1F46952200942A9D /* test03.mp4 */; };
 		F35E284A72C646F7CAE8DCDF /* Pods_CutTheVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F971249634E4EA42360FE7EE /* Pods_CutTheVideo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutVideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		019840941F4542A9009F389A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		019840961F4542B0009F389A /* Reducers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reducers.swift; sourceTree = "<group>"; };
 		019840981F4542B5009F389A /* Stores.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
@@ -49,6 +52,7 @@
 		F2496B6F1F42C8A100D77EF5 /* CustomScissorsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomScissorsView.swift; sourceTree = "<group>"; };
 		F2496B731F42FDA300D77EF5 /* CutTheVideoViewController3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutTheVideoViewController3.swift; sourceTree = "<group>"; };
 		F2496B761F4421DC00D77EF5 /* RAReorderableLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RAReorderableLayout.swift; sourceTree = "<group>"; };
+		F25DE8AD1F46952200942A9D /* test03.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test03.mp4; sourceTree = "<group>"; };
 		F971249634E4EA42360FE7EE /* Pods_CutTheVideo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CutTheVideo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -129,10 +133,12 @@
 				F2496B541F414D0100D77EF5 /* ViewController.swift */,
 				F2496B641F414E2E00D77EF5 /* CutTheVideoViewController.swift */,
 				F2496B6C1F42A91900D77EF5 /* CutTheVideoViewController2.swift */,
+				010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */,
 				F2496B731F42FDA300D77EF5 /* CutTheVideoViewController3.swift */,
 				F2496B6F1F42C8A100D77EF5 /* CustomScissorsView.swift */,
 				F2496B671F4153A600D77EF5 /* test01.mp4 */,
 				F2496B6A1F416E7500D77EF5 /* test02.mov */,
+				F25DE8AD1F46952200942A9D /* test03.mp4 */,
 				F2496B561F414D0100D77EF5 /* Main.storyboard */,
 				F2496B591F414D0100D77EF5 /* Assets.xcassets */,
 				F2496B5B1F414D0100D77EF5 /* LaunchScreen.storyboard */,
@@ -208,6 +214,7 @@
 				F2496B681F4153A600D77EF5 /* test01.mp4 in Resources */,
 				F2496B5A1F414D0100D77EF5 /* Assets.xcassets in Resources */,
 				F2496B6B1F416E7500D77EF5 /* test02.mov in Resources */,
+				F25DE8AE1F46957900942A9D /* test03.mp4 in Resources */,
 				F2496B581F414D0100D77EF5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,6 +276,7 @@
 			files = (
 				F2496B771F4421DC00D77EF5 /* RAReorderableLayout.swift in Sources */,
 				F2496B6D1F42A91900D77EF5 /* CutTheVideoViewController2.swift in Sources */,
+				010F10721F46BD280041876D /* CutVideoCollectionViewCell.swift in Sources */,
 				0198409F1F45438B009F389A /* VideoConfiguration.swift in Sources */,
 				019840A01F45438B009F389A /* VideoSegmentComposition.swift in Sources */,
 				0198409E1F45438B009F389A /* UndoOperation.swift in Sources */,

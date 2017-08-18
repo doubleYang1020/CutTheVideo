@@ -9,46 +9,28 @@
 import ReSwift
 import UIKit
 import MediaPlayer
-//import RAReorderableLayout
-//import FDStackView
-
-
-class CutVideoPreviewCell: UICollectionViewCell {
-  
-  let stackView = UIView()
-  
-  
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    self.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
-    //    stackView.axis = .horizontal
-    //    stackView.distribution = .fillEqually
-    
-    stackView.frame = CGRect.init(x: 2, y: 2, width: frame.size.width-4, height: 50)
-    self.contentView.addSubview(stackView)
-    //    stackView.backgroundColor = UIColor.blue
-    //    stackView.frame = CGRect.init(x: 0, y: 2, width: frame.size.width, height: 46)
-    
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-}
 
 struct CutTheVideoItemInfo {
-  var imageAry:[UIImage] = [UIImage]()
-  var isShowGriddingShade : Bool = false
+  var imageAry: [UIImage] = []
+  var isShowGriddingShade: Bool = false
   let videoSegment: VideoSegment
+  let fatherIndex: Int = 0
 }
 
 
-
+enum CutTheVideoCorType {
+  case ForDefault
+  case ForManyPeriodOfVideo
+}
 
 class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, RAReorderableLayoutDataSource{
   
+  var corType : CutTheVideoCorType = .ForDefault
   
-  let movie = MPMoviePlayerController()
+  var videoUrlAry : [URL] = [URL]()
+  
+  
+  var movie = MPMoviePlayerController()
   
   //  var dataAry : [[UIImage]] = [[UIImage]]()
   
@@ -181,12 +163,31 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   }
   
   fileprivate func initVideoKeyFrameData(){
+    
+    
+    if self.corType == .ForDefault {
+      let moviePath = Bundle.main.path(forResource: "test02", ofType: "mov")
+      let videoUrl = URL.init(fileURLWithPath: moviePath!)
+      videoUrlAry.append(videoUrl)
+    }else{
+      
+      let moviePath1 = Bundle.main.path(forResource: "test03", ofType: "mp4")
+      let videoUrl1 = URL.init(fileURLWithPath: moviePath1!)
+      videoUrlAry.append(videoUrl1)
+      
+      let moviePath2 = Bundle.main.path(forResource: "test02", ofType: "mov")
+      let videoUrl2 = URL.init(fileURLWithPath: moviePath2!)
+      videoUrlAry.append(videoUrl2)
+      
+      let moviePath3 = Bundle.main.path(forResource: "test01", ofType: "mp4")
+      let videoUrl3 = URL.init(fileURLWithPath: moviePath3!)
+      videoUrlAry.append(videoUrl3)
+    }
+    
+    
     movie.view.translatesAutoresizingMaskIntoConstraints = false
-    let moviePath = Bundle.main.path(forResource: "test02", ofType: "mov")
-    //    let moviePath = Bundle.main.path(forResource: "test01", ofType: "mp4")
-    let asset = AVURLAsset.init(url: URL.init(fileURLWithPath: moviePath!))
+    let asset = AVURLAsset.init(url: videoUrlAry.first!)
     avPlayer.replaceCurrentItem(with: AVPlayerItem(asset: asset))
-    playerView.tag = 99
     view.addSubview(playerView)
     playerView.snp.makeConstraints { (make) -> Void in
       make.top.right.bottom.left.equalTo(self.view)
@@ -194,7 +195,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     playerLayer.frame = UIScreen.main.bounds
     playerView.layer.insertSublayer(playerLayer, at: 0)
     
-    movie.contentURL = URL.init(fileURLWithPath: moviePath!)
+    movie.contentURL = videoUrlAry.first!
     movie.shouldAutoplay = false
     
     assetDuration = asset.duration
@@ -286,16 +287,33 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     layout.headerReferenceSize = CGSize.init(width: 0, height: 0)
     
+    
+    var collectonViewHeight:CGFloat = 0.0
+    if self.corType == .ForDefault {
+      collectonViewHeight = 54.0
+    }else{
+      collectonViewHeight = 60.0
+    }
     layout.footerReferenceSize = CGSize.init(width: UIScreen.main.bounds.size.width/2 - 54, height: 0)
     
-    videoKeyFrameCollectionView = UICollectionView.init(frame: CGRect.init(x: 0, y: UIScreen.main.bounds.size.height - 100, width: UIScreen.main.bounds.size.width, height: 54), collectionViewLayout: layout)
+    
+    videoKeyFrameCollectionView = UICollectionView.init(frame: CGRect.init(x: 0, y: UIScreen.main.bounds.size.height - 105, width: UIScreen.main.bounds.size.width, height: collectonViewHeight), collectionViewLayout: layout)
+    
+    
     self.view.addSubview(videoKeyFrameCollectionView)
     
     videoKeyFrameCollectionView.backgroundColor = UIColor.clear
     videoKeyFrameCollectionView.delegate = self
     videoKeyFrameCollectionView.dataSource = self
     // 注册cell
-    videoKeyFrameCollectionView.register(CutVideoPreviewCell.self, forCellWithReuseIdentifier: "cutVideoPreviewCell")
+    
+    
+    if self.corType == .ForDefault {
+      videoKeyFrameCollectionView.register(CutVideoPreviewCell.self, forCellWithReuseIdentifier: "cutVideoPreviewCell")
+    }else{
+      videoKeyFrameCollectionView.register(CutVideosPreviewCell.self, forCellWithReuseIdentifier: "cutVideosPreviewCell")
+    }
+    
     videoKeyFrameCollectionView.showsHorizontalScrollIndicator = false
     videoKeyFrameCollectionView.showsVerticalScrollIndicator = false
     videoKeyFrameCollectionView.alwaysBounceHorizontal = true
@@ -350,8 +368,45 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
 //      itemInfo.isShowGriddingShade = false
       dataAry.append(itemInfo)
       
-      videoKeyFrameCollectionView.reloadData()
-      videoKeyFrameCollectionView.contentInset = UIEdgeInsetsMake(0, UIScreen.main.bounds.size.width/2, 0, 0)
+      
+      imgArry.removeAll()
+      if dataAry.count < videoUrlAry.count {
+        
+
+        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.MPMoviePlayerThumbnailImageRequestDidFinish, object: movie)
+        
+        let asset = AVURLAsset.init(url: videoUrlAry[dataAry.count])
+
+        
+      
+        movie = MPMoviePlayerController()
+        movie.contentURL = videoUrlAry[dataAry.count]
+        movie.shouldAutoplay = false
+        movie.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let assetDuration = asset.duration
+        
+        
+        var arry2:[NSNumber] = [NSNumber]()
+        assetSeconds = Int(CMTimeGetSeconds(assetDuration))
+        for i in 0...assetSeconds {
+          arry2.append(NSNumber.init(value: Float(i)))
+          print("xxxxx %d",i);
+        }
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(mpMoviePlayerThumbnailImageRequestDidFinishNotification(notification:)), name: Notification.Name.MPMoviePlayerThumbnailImageRequestDidFinish, object: movie)
+        movie.requestThumbnailImages(atTimes:arry2, timeOption: .exact)
+//        videoKeyFrameCollectionView.reloadData()
+        
+      }else{
+        videoKeyFrameCollectionView.reloadData()
+        videoKeyFrameCollectionView.contentInset = UIEdgeInsetsMake(0, UIScreen.main.bounds.size.width/2, 0, 0)
+      }
+      
+      
+
     }
     
     
@@ -389,7 +444,13 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     //      return CGSize(width: 50 * dataAry[indexPath.row].count + 4, height: 50)
     //    }
     
-    return CGSize(width: 50 * dataAry[indexPath.row].imageAry.count + 4, height: 54)
+    if self.corType == .ForDefault {
+      return CGSize(width: 50 * dataAry[indexPath.row].imageAry.count + 4, height: 54)
+    }else{
+      return CGSize(width: 50 * dataAry[indexPath.row].imageAry.count + 10, height: 60)
+    }
+    
+    
     
     
   }
@@ -403,64 +464,71 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   //  }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cutVideoPreviewCell", for: indexPath) as! CutVideoPreviewCell
     
-    _ = cell.stackView.subviews.map {$0.removeFromSuperview()} //.apply { $0.removeFromSuperview() }
-    
-    
-    //    if longPrescessCellIndex.row == indexPath.row && isLongPrecess {
-    //      let imageAry = dataAry[indexPath.row]
-    //      let imageView = UIImageView.init(frame: CGRect.init(x: 0 , y: 0, width: 50, height: 46))
-    //      imageView.image = imageAry.first
-    //      imageView.contentMode = .scaleAspectFill
-    //      imageView.clipsToBounds = true
-    //      cell.stackView.addSubview(imageView)
-    //    }else{
-    //      let imageAry = dataAry[indexPath.row]
-    //      for i in 0..<imageAry.count {
-    //        let imageView = UIImageView.init(frame: CGRect.init(x: 50 * CGFloat(i) , y: 0, width: 50, height: 46))
-    //        imageView.image = imageAry[i]
-    //        imageView.contentMode = .scaleAspectFill
-    //        imageView.clipsToBounds = true
-    //        //      cell.stackView.addArrangedSubview(imageView)
-    //        cell.stackView.addSubview(imageView)
-    //      }
-    //
-    //    }
-    
-    
-    let imageAry = dataAry[indexPath.row].imageAry
-    let isShowGriddingShade = dataAry[indexPath.row].isShowGriddingShade
-    for i in 0..<imageAry.count {
-      let imageView = UIImageView.init(frame: CGRect.init(x: 50 * CGFloat(i) , y: 0, width: 50, height: 50))
-      imageView.image = imageAry[i]
-      imageView.contentMode = .scaleAspectFill
-      imageView.clipsToBounds = true
-      //      cell.stackView.addArrangedSubview(imageView)
-      cell.stackView.addSubview(imageView)
-      //     imageName icHidemask
-      if isShowGriddingShade {
-        let griddingShadeImageView = UIImageView.init(frame: imageView.frame)
-        griddingShadeImageView.image = UIImage.init(named: "icHidemask")
-        griddingShadeImageView.contentMode = .scaleAspectFill
-        griddingShadeImageView.clipsToBounds = true
-        cell.stackView.addSubview(griddingShadeImageView)
+    if self.corType == .ForDefault {
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cutVideoPreviewCell", for: indexPath) as! CutVideoPreviewCell
+      
+      _ = cell.stackView.subviews.map({$0.removeFromSuperview()})//.apply { $0.removeFromSuperview() }
+      let imageAry = dataAry[indexPath.row].imageAry
+      let isShowGriddingShade = dataAry[indexPath.row].isShowGriddingShade
+      for i in 0..<imageAry.count {
+        let imageView = UIImageView.init(frame: CGRect.init(x: 50 * CGFloat(i) , y: 0, width: 50, height: 50))
+        imageView.image = imageAry[i]
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        //      cell.stackView.addArrangedSubview(imageView)
+        cell.stackView.addSubview(imageView)
+        //     imageName icHidemask
+        if isShowGriddingShade {
+          let griddingShadeImageView = UIImageView.init(frame: imageView.frame)
+          griddingShadeImageView.image = UIImage.init(named: "icHidemask")
+          griddingShadeImageView.contentMode = .scaleAspectFill
+          griddingShadeImageView.clipsToBounds = true
+          cell.stackView.addSubview(griddingShadeImageView)
+          
+          cell.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 0.5)
+          imageView.alpha = 0.5
+          
+        }else{
+          cell.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
+        }
         
-        cell.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 0.5)
-        imageView.alpha = 0.5
-        
-      }else{
-        cell.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
       }
       
+      return cell
+    }else{
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cutVideosPreviewCell", for: indexPath) as! CutVideosPreviewCell
       
+      _ = cell.stackView.subviews.map({$0.removeFromSuperview()})//.apply { $0.removeFromSuperview() }
+      let imageAry = dataAry[indexPath.row].imageAry
+      let isShowGriddingShade = dataAry[indexPath.row].isShowGriddingShade
+      for i in 0..<imageAry.count {
+        let imageView = UIImageView.init(frame: CGRect.init(x: 50 * CGFloat(i) , y: 0, width: 50, height: 50))
+        imageView.image = imageAry[i]
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        //      cell.stackView.addArrangedSubview(imageView)
+        cell.stackView.addSubview(imageView)
+        //     imageName icHidemask
+        if isShowGriddingShade {
+          let griddingShadeImageView = UIImageView.init(frame: imageView.frame)
+          griddingShadeImageView.image = UIImage.init(named: "icHidemask")
+          griddingShadeImageView.contentMode = .scaleAspectFill
+          griddingShadeImageView.clipsToBounds = true
+          cell.stackView.addSubview(griddingShadeImageView)
+          cell.whiteBgView.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 0.5)
+          imageView.alpha = 0.5
+          
+        }else{
+          cell.whiteBgView.backgroundColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1)
+        }
+        
+      }
       
+      return cell
     }
     
-    
-    
-    
-    return cell
+
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -566,6 +634,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     
   }
+  
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     
     if isLongPrecess {
@@ -598,7 +667,13 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     var currentOffSetX = 0.0
     while CGFloat(currentOffSetX) < videoKeyFrameCollectionView.contentOffset.x  + UIScreen.main.bounds.size.width/2{
       let arry = dataAry[i].imageAry
-      currentOffSetX = Double(arry.count*50 + 14) + currentOffSetX
+      
+      if self.corType == .ForDefault {
+        currentOffSetX = Double(arry.count*50 + 14) + currentOffSetX
+      }else{
+        currentOffSetX = Double(arry.count*50 + 20) + currentOffSetX
+      }
+      
       
       i += 1
     }
@@ -616,10 +691,20 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     let i = getCurrentAryIndex()
     
+    var scrollViewSpacing = 0
+    var scrollViewCellLineWidth:CGFloat = 0.0
+    if self.corType == .ForDefault {
+      scrollViewSpacing = 14
+      scrollViewCellLineWidth = 2.0
+    }else{
+
+       scrollViewSpacing = 20
+      scrollViewCellLineWidth = 5.0
+    }
     
     
     
-    let offsetX = scrollView.contentOffset.x - (-(UIScreen.main.bounds.size.width/2)) - 2 - CGFloat(i*(14))
+    let offsetX = scrollView.contentOffset.x - (-(UIScreen.main.bounds.size.width/2)) - scrollViewCellLineWidth - CGFloat(i*(scrollViewSpacing))
     let a = offsetX.truncatingRemainder(dividingBy: 50)
     if a>25 {
       print("videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet \(a)")
@@ -662,19 +747,40 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     
     var offSetX2 : CGFloat = 0.0
     
+    var scrollViewSpacing = 0
+    if self.corType == .ForDefault {
+      scrollViewSpacing = 14
+    }else{
+      
+      scrollViewSpacing = 20
+    }
+    
     for i in 0...indexPath {
       
       let arry = dataAry[i].imageAry
-      offSetX2 = CGFloat(arry.count*50 + 14) + offSetX2
+      offSetX2 = CGFloat(arry.count*50 + scrollViewSpacing) + offSetX2
     }
     
-    if offsetX == offSetX2 - 12 || offsetX == offSetX2 - 5 || offsetX == offSetX2 - CGFloat(12) - CGFloat(dataAry[indexPath].imageAry.count)*CGFloat(50) {
-      print("落点在头在尾")
-      setCutBtnViewStateForCanNotDoing()
-      
+
+    
+    if self.corType == .ForDefault {
+      if offsetX == offSetX2 - 12 || offsetX == offSetX2 - 5 || offsetX == offSetX2 - CGFloat(12) - CGFloat(dataAry[indexPath].imageAry.count)*CGFloat(50) {
+        print("落点在头在尾")
+        setCutBtnViewStateForCanNotDoing()
+        
+      }else{
+        setCutBtnViewStateForCanDoing()
+        print("落点在中间")
+      }
     }else{
-      setCutBtnViewStateForCanDoing()
-      print("落点在中间")
+      if offsetX == offSetX2 - 15 || offsetX == offSetX2 - 5 || offsetX == offSetX2 - CGFloat(15) - CGFloat(dataAry[indexPath].imageAry.count)*CGFloat(50) {
+        print("落点在头在尾")
+        setCutBtnViewStateForCanNotDoing()
+        
+      }else{
+        setCutBtnViewStateForCanDoing()
+        print("落点在中间")
+      }
     }
     
     
@@ -810,7 +916,14 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     videoKeyFrameCollectionView.reloadData()
     print("clickCutBtn \(offsetX)")
     
-    videoKeyFrameCollectionView.setContentOffset(CGPoint.init(x: videoKeyFrameCollectionView.contentOffset.x + CGFloat.init(7), y: 0), animated: true)
+    if self.corType == .ForDefault {
+        videoKeyFrameCollectionView.setContentOffset(CGPoint.init(x: videoKeyFrameCollectionView.contentOffset.x + CGFloat.init(7), y: 0), animated: true)
+    }else{
+      
+      videoKeyFrameCollectionView.setContentOffset(CGPoint.init(x: videoKeyFrameCollectionView.contentOffset.x + CGFloat.init(10), y: 0), animated: true)
+    }
+    
+
     setCutBtnViewStateForCanNotDoing()
     
     // Dispatch
@@ -881,6 +994,9 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       print("not implement")
       
     }
+    
+//    detectionCutBtnViewsState()
+    videoKeyFrameCollectionViewScrolleToCorrectContentOfFSet(scrollView: videoKeyFrameCollectionView)
   }
   
   @objc private func playButtonAction(button: UIButton) -> () {

@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,9 +27,18 @@
                                     <action selector="ClickCutBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5px-bx-L3g"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lbi-zp-FGh">
+                                <rect key="frame" x="141" y="370" width="92" height="30"/>
+                                <state key="normal" title="编辑多段视频"/>
+                                <connections>
+                                    <action selector="ClickCutMoreVideoBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aOC-cg-0Rk"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="lbi-zp-FGh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="grK-AD-QUK"/>
+                            <constraint firstItem="lbi-zp-FGh" firstAttribute="top" secondItem="Fgg-lE-vK8" secondAttribute="bottom" constant="22" id="hIP-Cz-yBc"/>
                             <constraint firstItem="Fgg-lE-vK8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="nuB-Dr-dBD"/>
                             <constraint firstItem="Fgg-lE-vK8" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="xfb-xj-SR6"/>
                         </constraints>
