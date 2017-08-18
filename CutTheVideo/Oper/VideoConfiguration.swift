@@ -28,6 +28,7 @@ extension CMTimeRange {
     player.seek(to: self.start)
     player.play()
     guard duration.flags != .positiveInfinity else { return () }
+    print("will stop at \(UInt32(duration.seconds * 1_000_000))")
     usleep(UInt32(duration.seconds * 1_000_000))
   }
   

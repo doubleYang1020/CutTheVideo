@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		010F10721F46BD280041876D /* CutVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */; };
 		019840951F4542A9009F389A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840941F4542A9009F389A /* Actions.swift */; };
 		019840971F4542B0009F389A /* Reducers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840961F4542B0009F389A /* Reducers.swift */; };
 		019840991F4542B5009F389A /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840981F4542B5009F389A /* Stores.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutVideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		019840941F4542A9009F389A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		019840961F4542B0009F389A /* Reducers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reducers.swift; sourceTree = "<group>"; };
 		019840981F4542B5009F389A /* Stores.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				F2496B541F414D0100D77EF5 /* ViewController.swift */,
 				F2496B641F414E2E00D77EF5 /* CutTheVideoViewController.swift */,
 				F2496B6C1F42A91900D77EF5 /* CutTheVideoViewController2.swift */,
+				010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */,
 				F2496B731F42FDA300D77EF5 /* CutTheVideoViewController3.swift */,
 				F2496B6F1F42C8A100D77EF5 /* CustomScissorsView.swift */,
 				F2496B671F4153A600D77EF5 /* test01.mp4 */,
@@ -273,6 +276,7 @@
 			files = (
 				F2496B771F4421DC00D77EF5 /* RAReorderableLayout.swift in Sources */,
 				F2496B6D1F42A91900D77EF5 /* CutTheVideoViewController2.swift in Sources */,
+				010F10721F46BD280041876D /* CutVideoCollectionViewCell.swift in Sources */,
 				0198409F1F45438B009F389A /* VideoConfiguration.swift in Sources */,
 				019840A01F45438B009F389A /* VideoSegmentComposition.swift in Sources */,
 				0198409E1F45438B009F389A /* UndoOperation.swift in Sources */,
