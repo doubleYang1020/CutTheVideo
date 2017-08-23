@@ -13,6 +13,7 @@ import MediaPlayer
 
 struct CutTheVideoItemInfo {
   var imageAry: [UIImage] = []
+  var videoURLs: [URL] = []
   var isShowGriddingShade: Bool = false
   let videoSegment: VideoSegment
   let fatherIndex: Int 
@@ -30,7 +31,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   
   let layout = RAReorderableLayout()
   
-  var videoUrlAry : [URL] = [URL]()
+  var videoUrlAry : [URL] = []
   
   
   var movie = MPMoviePlayerController()
@@ -44,6 +45,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   var tempDataAryButton : [CutTheVideoItemInfo] = [CutTheVideoItemInfo]()
   
   var imgArry : [UIImage] =  [UIImage]()
+  var chunkURLs: [[URL]] = []
   
   var temporary: [UIImage] = [UIImage]()
   
@@ -57,12 +59,13 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   let playButton = UIButton()
   let lineView = UIView()
   let roundView = UIView()
+  let sessionFolder = VideoFileSystemHelper.createTempFolder()
   
   var isLongPrecess :Bool = false
   var longPrescessCellIndex :IndexPath = IndexPath.init(row: 0, section: 0)
   
   private let playerView = UIView()
-  private let avPlayer = AVPlayer()
+  private let avPlayer = AVQueuePlayer()
   private let playerLayer = AVPlayerLayer()
   private var moveCount = 0
   private var tempMoveInfo: (IndexPath, IndexPath)? = .none
@@ -94,6 +97,9 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     //    self.view.addSubview(scissorView)
     
     // Do any additional setup after loading the view.
+    DispatchQueue.global().async {
+      VideoSegmentComposition.splitVideo(assets: self.videoUrlAry.map({AVAsset(url: $0)}), destinationFolder: self.sessionFolder)
+    }
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -171,28 +177,6 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   }
   
   fileprivate func initVideoKeyFrameData(){
-    
-    
-    if self.corType == .ForDefault {
-      let moviePath = Bundle.main.path(forResource: "test02", ofType: "mov")
-      let videoUrl = URL.init(fileURLWithPath: moviePath!)
-      videoUrlAry.append(videoUrl)
-    }else{
-      
-      let moviePath1 = Bundle.main.path(forResource: "test03", ofType: "mp4")
-      let videoUrl1 = URL.init(fileURLWithPath: moviePath1!)
-      videoUrlAry.append(videoUrl1)
-      
-      let moviePath2 = Bundle.main.path(forResource: "test02", ofType: "mov")
-      let videoUrl2 = URL.init(fileURLWithPath: moviePath2!)
-      videoUrlAry.append(videoUrl2)
-      
-      let moviePath3 = Bundle.main.path(forResource: "test01", ofType: "mp4")
-      let videoUrl3 = URL.init(fileURLWithPath: moviePath3!)
-      videoUrlAry.append(videoUrl3)
-    }
-    
-    
     movie.view.translatesAutoresizingMaskIntoConstraints = false
     let asset = AVURLAsset.init(url: videoUrlAry.first!)
     avPlayer.replaceCurrentItem(with: AVPlayerItem(asset: asset))
@@ -374,6 +358,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       
       let itemInfo = CutTheVideoItemInfo(
         imageAry: imgArry,
+        videoURLs: [],
         isShowGriddingShade: false,
         videoSegment: VideoSegment(start: kCMTimeZero, end: assetDuration),
         fatherIndex : dataAry.count
@@ -991,6 +976,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     let durationSectionA = CMTimeMake(Int64(a), 1)
     let sectionA = CutTheVideoItemInfo(
       imageAry: arya,
+      videoURLs: [],
       isShowGriddingShade: originSection.isShowGriddingShade,
       videoSegment: VideoSegment(start: originSection.videoSegment.start, duration: durationSectionA),
     fatherIndex: dataAry[x].fatherIndex
@@ -1001,6 +987,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
     let startTimeSectionB = CMTimeAdd(sectionA.videoSegment.start, sectionA.videoSegment.duration)
     let sectionB = CutTheVideoItemInfo(
       imageAry: aryb,
+      videoURLs: [],
       isShowGriddingShade: originSection.isShowGriddingShade,
       videoSegment: VideoSegment(start: startTimeSectionB, duration: durationSectionB),
       fatherIndex: dataAry[x].fatherIndex
@@ -1057,6 +1044,7 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
       let duration = CMTimeAdd(sectionA.videoSegment.duration, sectionA.videoSegment.duration)
       let infoItem = CutTheVideoItemInfo(
         imageAry: combinedArray,
+        videoURLs: [],
         isShowGriddingShade: false,
         videoSegment: VideoSegment(start: sectionA.videoSegment.start, duration: duration),
         fatherIndex: sectionA.fatherIndex
@@ -1099,14 +1087,18 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
   }
   
   @objc private func playButtonAction(button: UIButton) -> () {
-//    print(avPlayer.rate)
-//    avPlayer.replaceCurrentItem(with: <#T##AVPlayerItem?#>)
-    DispatchQueue.global(qos: .background).async {
-      for vs in self.generateVideoSegmentSequence() {
-        vs.executionPlan(player: self.avPlayer)
-      }
-      self.avPlayer.pause()
+//    DispatchQueue.global(qos: .background).async {
+//      for vs in self.generateVideoSegmentSequence() {
+//        vs.executionPlan(player: self.avPlayer)
+//      }
+//      self.avPlayer.pause()
+//    }
+    
+    avPlayer.removeAllItems()
+    for i in 0..<61 {
+      avPlayer.insert(AVPlayerItem(url: URL(fileURLWithPath: "/Users/hirochin/Public/tmp/{section_id}_\(i).mov")), after: .none)
     }
+    avPlayer.play()
   }
   
   // MARK: - helper methods
@@ -1130,7 +1122,40 @@ class CutTheVideoViewController2: ViewController , RAReorderableLayoutDelegate, 
 
 // MARK: - StoreSubscriber 
 extension CutTheVideoViewController2: StoreSubscriber {
+  
   func newState(state: AppState) {
-    print(state)
+    if state.processingCount == 0 {
+      let urls = VideoFileSystemHelper.listFolder(folderURL: sessionFolder)
+      chunkURLs = splitToChunks(urls: urls)
+      
+//      var tmpArray: [CutTheVideoItemInfo] = []
+//      dataAry = tmpArray
+      
+//      var assets: [AVAsset] = []
+//      for url in urls {
+//        print(url)
+//        assets.append(AVAsset(url: url))
+//      }
+//      let composite = VideoSegmentComposition.composite(assets: urls.map({AVAsset(url: $0)}))
+//      
+//      let destURL = sessionFolder.appendingPathComponent("xx.mp4")
+//      VideoSegmentComposition.export(asset: composite, destination: destURL)
+    }
   }
+  
+  func splitToChunks(urls: [URL]) -> [[URL]] {
+    let assets = videoUrlAry.map { AVAsset(url: $0) }
+    let durationArray = assets.map { Int(ceil($0.duration.seconds)) }
+    assert(urls.count == durationArray.reduce(0, { $0 + $1 }))
+    
+    var xs: [[URL]] = []
+    for i in 0..<durationArray.count {
+      let existCount = xs.reduce(0, { $0 + $1.count })
+      let start = existCount
+      let end = existCount + durationArray[i]
+      xs.append(Array(urls[start..<end]))
+    }
+    return xs
+  }
+  
 }

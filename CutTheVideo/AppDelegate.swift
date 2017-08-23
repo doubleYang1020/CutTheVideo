@@ -11,6 +11,13 @@ import UIKit
 import RTRootNavigationController
 
 
+struct log {
+  static func verbose(_ t: Any) -> () {
+    print("\(String.init(describing: t))")
+  }
+}
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

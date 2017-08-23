@@ -22,4 +22,11 @@ struct Actions {
     let error: Error?
   }
   
+  struct WillExport: Action {
+    let count: Int
+  }
+  
+  struct ExportCompelete: Action {
+    let isSuccess: Bool
+  }
 }
