@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		010F10721F46BD280041876D /* CutVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */; };
+		013202F01F4D5082000A56F0 /* VideoFileSystemHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013202EF1F4D5082000A56F0 /* VideoFileSystemHelper.swift */; };
 		019840951F4542A9009F389A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840941F4542A9009F389A /* Actions.swift */; };
 		019840971F4542B0009F389A /* Reducers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840961F4542B0009F389A /* Reducers.swift */; };
 		019840991F4542B5009F389A /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019840981F4542B5009F389A /* Stores.swift */; };
@@ -30,6 +31,7 @@
 
 /* Begin PBXFileReference section */
 		010F10711F46BD280041876D /* CutVideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutVideoCollectionViewCell.swift; sourceTree = "<group>"; };
+		013202EF1F4D5082000A56F0 /* VideoFileSystemHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoFileSystemHelper.swift; sourceTree = "<group>"; };
 		019840941F4542A9009F389A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		019840961F4542B0009F389A /* Reducers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reducers.swift; sourceTree = "<group>"; };
 		019840981F4542B5009F389A /* Stores.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				0198409B1F45438B009F389A /* UndoOperation.swift */,
 				0198409C1F45438B009F389A /* VideoConfiguration.swift */,
 				0198409D1F45438B009F389A /* VideoSegmentComposition.swift */,
+				013202EF1F4D5082000A56F0 /* VideoFileSystemHelper.swift */,
 			);
 			path = Oper;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				F2496B551F414D0100D77EF5 /* ViewController.swift in Sources */,
 				019840951F4542A9009F389A /* Actions.swift in Sources */,
 				F2496B531F414D0100D77EF5 /* AppDelegate.swift in Sources */,
+				013202F01F4D5082000A56F0 /* VideoFileSystemHelper.swift in Sources */,
 				F2496B701F42C8A100D77EF5 /* CustomScissorsView.swift in Sources */,
 				019840971F4542B0009F389A /* Reducers.swift in Sources */,
 				019840991F4542B5009F389A /* Stores.swift in Sources */,
